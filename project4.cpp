@@ -25,7 +25,7 @@ void myDraw();
 void keyboard( unsigned char, int, int );
 
 
-void main( int argc, char **argv )
+int main( int argc, char **argv )
 {
   // Read polygonal mesh
 
@@ -76,6 +76,7 @@ void main( int argc, char **argv )
 
   // Main loop
   glutMainLoop();
+  return 0;
 }
 
 // Display callback
