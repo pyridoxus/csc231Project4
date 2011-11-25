@@ -19,11 +19,12 @@ float bg[3] = { 0.5, 0.5, 0.5 };
 
 // Functions
 unsigned *read_texture(char *, int *, int * );
+void showMenu(void);
 
 // Callbacks
 void myDraw();
 void keyboard( unsigned char, int, int );
-
+void specialKeyFunc( int key, int x, int y );
 
 int main( int argc, char **argv )
 {
@@ -71,6 +72,7 @@ int main( int argc, char **argv )
   // Callbacks
   glutDisplayFunc( myDraw );
   glutKeyboardFunc( keyboard );
+	glutSpecialFunc( specialKeyFunc );
 
 	// Menu
 
@@ -97,13 +99,72 @@ void keyboard( unsigned char key, int x, int y )
 {
   // Process entries
   switch( key )
-    {
+  {
     case 'q':							// Quit
       exit(1);
-      break;
-	}
+    break;
+    case 'p':		// display as points
+    break;
+    case 'w':		// display as wireframe
+    break;
+    case 'h':		// display as hidden-surface wireframe
+    break;
+    case 'm':		// display as polygons
+    break;
+    case 's':		// toggle flat/smooth shading
+    break;
+    case 't':		// display with 2D texture
+    break;
+    case 'e':		// display with Environment texture
+    break;
+    case 'b':		// display with 2D and Environment texture
+    break;
+    case 'A':		// start animated spin about Y axis
+    break;
+    case 'S':		// stop animated spin about Y axis
+    break;
+    case 'R':		// reset animated spin about Y axis
+    break;
+ 	}
 
   // Redraw the scene
   glutPostRedisplay();
 }
 
+void showMenu(void)
+{
+	cout << "key  function" << endl;
+	cout << " p - display as points" << endl;
+	cout << " w - display as wireframe" << endl;
+	cout << " h - display as hidden-surface wireframe" << endl;
+	cout << " m - display as polygons" << endl;
+	cout << " s - toggle flat/smooth shading" << endl;
+	cout << " t - display with 2D texture" << endl;
+	cout << " e - display with Environment texture" << endl;
+	cout << " b - display with 2D and Environment texture" << endl;
+	cout << " A - start animated spin about Y axis" << endl;
+	cout << " S - stop animated spin about Y axis" << endl;
+	cout << " R - reset animated spin about Y axis" << endl;
+	cout << " q - exit the program" << endl;
+ 	return;
+}
+
+void specialKeyFunc( int key, int x, int y )
+{
+	switch(key)
+	{
+		case GLUT_KEY_LEFT:		// Translate along –x axis
+		break;
+		case GLUT_KEY_RIGHT:	// Translate along +x axis
+		break;
+		case GLUT_KEY_DOWN:		// Translate along –y axis
+		break;
+		case GLUT_KEY_UP:			// Translate along +y axis
+		break;
+		case GLUT_KEY_PAGE_UP:	// Translate along –z axis
+		break;
+		case GLUT_KEY_PAGE_DOWN:	// Translate along +z axis	}
+		break;
+	}
+	return;
+}
