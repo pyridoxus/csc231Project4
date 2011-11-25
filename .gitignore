@@ -2,5 +2,6 @@
 .cproject
 *.obj
 *.sgi
+*.swp
 Debug/*
 Release/*
