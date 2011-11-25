@@ -14,6 +14,7 @@ using namespace std;
 // Using Linux paths and toolchain...
 string texFile = "textures/marble.sgi";
 string envFile = "textures/spheremap.sgi";
+string objFile = "objects/buckyball.obj";
 
 float fov = 45.0;
 float aspect = 1.333;
@@ -23,6 +24,7 @@ int width, height;
 GLubyte *texels  = NULL;
 GLubyte *texelsR = NULL;
 float bg[3] = { 0.5, 0.5, 0.5 };
+GLObject glObject(objFile);	// Initialize the object
 
 // Functions
 unsigned *read_texture(char *, int *, int * );

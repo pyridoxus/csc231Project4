@@ -49,6 +49,7 @@ int main( int argc, char **argv )
 	glutSpecialFunc( specialKeyFunc );
 
 	// Menu
+	showMenu();
 
   // Main loop
   glutMainLoop();
