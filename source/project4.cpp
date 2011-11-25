@@ -6,8 +6,10 @@ using namespace std;
 // NOTE: Download header above (glext.h) FROM http://www.opengl.org/registry/ and
 // place in directory C:\Program Files\Microsoft Visual Studio 9.0\VC\include\GL
 
-string texFile = "C:\\Home\\Class\\CSC231\\Projects\\Textures\\brick.sgi";
-string envFile = "C:\\Home\\Class\\CSC231\\Projects\\Textures\\spheremap.sgi";
+// Using Linux paths and toolchain...
+string texFile = "textures/marble.sgi";
+string envFile = "textures/spheremap.sgi";
+
 float fov = 45.0;
 float aspect = 1.333;
 float nearClip = 0.01;
@@ -145,6 +147,12 @@ void showMenu(void)
 	cout << " A - start animated spin about Y axis" << endl;
 	cout << " S - stop animated spin about Y axis" << endl;
 	cout << " R - reset animated spin about Y axis" << endl;
+	cout << " Left Arrow  - Translate light along –x axis" << endl;
+	cout << " Right Arrow - Translate light along +x axis" << endl;
+	cout << " Down Arrow  - Translate light along –y axis" << endl;
+	cout << " Up Arrow    - Translate light along +y axis" << endl;
+	cout << " Page Up     - Translate light along –z axis" << endl;
+	cout << " Page Down   - Translate light along +z axis" << endl;
 	cout << " q - exit the program" << endl;
  	return;
 }
