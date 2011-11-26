@@ -11,10 +11,16 @@ struct Vertex
 
 class Polygon
 {
+	// There are two ways to create a Polygon object.
+		// 1) Send in the face string data when allocating the polygon
+		// 2) Create empty polygon and set the polygon data later using the set
+		//		member function.
 	public:
 		Polygon(string face); // Use string from file to build polygon
+		Polygon(void); 				// Create an empty polygon
 		virtual ~Polygon();
 		Vertex *getVertex(unsigned int index);	// Return pointer to vertex at index
+		void setPolygon(string face); // Use string from file to setup the polygon
 //	Vector3D *getNormal(void);	// Return pointer to polygon normal
 	private:
 		Vertex vertex[3];	// Statically contain 3 vertices for this project

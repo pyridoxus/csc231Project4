@@ -2,12 +2,23 @@
 
 Polygon::Polygon(string face)
 {
-	cout << face << endl;
+	this->setPolygon(face);
+	return;
+}
+
+Polygon::Polygon(void)
+{
 	return;
 }
 
 Polygon::~Polygon()
 {
 	cout << "Polygon Destructor" << endl;
+}
+
+void Polygon::setPolygon(string face)
+{
+	cout << face << endl;
+	return;
 }
 
