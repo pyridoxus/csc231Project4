@@ -1,9 +1,9 @@
 #include "GLObject.h"
 
-GLObject::GLObject(char *objFile)
+GLObject::GLObject(string objFile)
 {
 	char s[256];
-	fstream file(objFile, fstream::in);
+	fstream file(objFile.c_str(), fstream::in);
 	while(file.good())
 	{
 		file.getline(s, 256);

@@ -7,7 +7,7 @@
 
 #include "Polygon.h"
 
-Polygon::Polygon(char *face)
+Polygon::Polygon(string face)
 {
 
 }

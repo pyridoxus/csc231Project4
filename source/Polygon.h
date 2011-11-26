@@ -12,7 +12,7 @@ struct Vertex
 class Polygon
 {
 	public:
-		Polygon(char *face); // Use string from file to build polygon
+		Polygon(string face); // Use string from file to build polygon
 		virtual ~Polygon();
 		Vertex *getVertex(unsigned int index);	// Return pointer to vertex at index
 //	Vector3D *getNormal(void);	// Return pointer to polygon normal

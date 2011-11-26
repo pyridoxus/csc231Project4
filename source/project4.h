@@ -14,7 +14,7 @@ using namespace std;
 // Using Linux paths and toolchain...
 string texFile = "textures/marble.sgi";
 string envFile = "textures/spheremap.sgi";
-char objFile[] = "objects/buckyball.obj";
+string objFile = "objects/buckyball.obj";
 
 float fov = 45.0;
 float aspect = 1.333;
