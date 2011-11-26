@@ -4,8 +4,8 @@ GLObject::GLObject(String objFile)
 {
 	char s[256];
 	String st, dataType;
-	Polygon *tempPoly;
-	TextureVertex *tempTVertex;
+	Polygon tempPoly;
+	TextureVertex tempTVertex;
 	fstream file(objFile.c_str(), fstream::in);
 	while(file.good())
 	{
@@ -19,15 +19,13 @@ GLObject::GLObject(String objFile)
 		}
 		else if(!dataType.compare("vt"))
 		{
-			// Send remainder of the string to the texture vertex handler
-//			cout << "Found texture coordinates: " << st << endl;	// Debug
-			tempTVertex = new TextureVertex(st);
-			this->tvertex.push_back(*tempTVertex);
+			tempTVertex.setUV(st);	// Process string into floats
+			this->tvertex.push_back(tempTVertex);	// Store the floats
 		}
 		else if(!dataType.compare("f"))
 		{
-			tempPoly = new Polygon(st);
-			this->mesh.push_back(*tempPoly);
+			tempPoly.setPolygon(st);	// Process string into indices (vertex/texture)
+			this->mesh.push_back(tempPoly);	// Store indices
 		}
 	}
 	cout << "Number of polygons: " << this->mesh.size() << endl;
@@ -43,3 +41,26 @@ GLObject::~GLObject()
 	return;
 }
 
+void GLObject::print(void)
+{
+  vector<TextureVertex>::iterator tviter;
+  vector<Polygon>::iterator piter;
+  int a;
+
+  for(tviter = this->tvertex.begin(); tviter < this->tvertex.end(); tviter++)
+  {
+  	cout << "(" << tviter->getU() << ", " << tviter->getV() << ")" << endl;
+  }
+  for(piter = this->mesh.begin(); piter < this->mesh.end(); piter++)
+  {
+  	for(a = 0; a < 3; a++)
+  	{
+  		cout << piter->getVertex(a)->pointIndex << "/";
+  		cout << piter->getVertex(a)->textureIndex;
+  		if(a < 2) cout << ", ";
+  		else cout << endl;
+  	}
+  }
+
+
+}

@@ -12,6 +12,7 @@ class GLObject
 	public:
 		GLObject(String objFile);
 		virtual ~GLObject();
+		void print(void);	// Debug... print the contents of the vectors
 	private:
 // Use Vector 3D for points
 // Texture coordinates are 2D and are placed in a vector of 2D structure.

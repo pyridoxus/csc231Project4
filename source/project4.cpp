@@ -3,7 +3,7 @@
 int main( int argc, char **argv )
 {
   // Read polygonal mesh
-
+	glObject.print();
 	// Compute polygon and vertex normals
 
   // Initialize window system
