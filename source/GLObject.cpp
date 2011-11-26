@@ -22,6 +22,7 @@ GLObject::GLObject(String objFile)
 			// Send remainder of the string to the texture vertex handler
 //			cout << "Found texture coordinates: " << st << endl;	// Debug
 			tempTVertex = new TextureVertex(st);
+			this->tvertex.push_back(*tempTVertex);
 		}
 		else if(!dataType.compare("f"))
 		{
@@ -38,6 +39,7 @@ GLObject::~GLObject()
 {
 	cout << "Object destructor" << endl;
 	this->mesh.clear();	// Calls the mesh destructors.
+	this->tvertex.clear();	// Calls the tvertex destructors.
 	return;
 }
 

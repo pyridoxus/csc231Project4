@@ -16,6 +16,7 @@ TextureVertex::TextureVertex(String s)
 
 TextureVertex::~TextureVertex()
 {
+	cout << "TextureVertex destructor" << endl;	// Debug
 	return;
 }
 
