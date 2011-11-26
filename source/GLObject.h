@@ -5,6 +5,7 @@
 using namespace std;
 #include <vector>
 #include "Polygon.h"
+#include "TextureVertex.h"
 
 class GLObject
 {
@@ -18,6 +19,7 @@ class GLObject
 // Polygons are different objects. For this project, polygons only need to
 // worry about 3 points. Polygons also need to worry about texture coordinates.
 		vector <Polygon> mesh;
+		vector <TextureVertex> tvertex;
 };
 
 #endif

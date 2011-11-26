@@ -5,6 +5,7 @@ GLObject::GLObject(String objFile)
 	char s[256];
 	String st, dataType;
 	Polygon *tempPoly;
+	TextureVertex *tempTVertex;
 	fstream file(objFile.c_str(), fstream::in);
 	while(file.good())
 	{
@@ -18,8 +19,9 @@ GLObject::GLObject(String objFile)
 		}
 		else if(!dataType.compare("vt"))
 		{
-			// Send remainder of the string to the texture coordinate handler
-			cout << "Found texture coordinates: " << st << endl;
+			// Send remainder of the string to the texture vertex handler
+//			cout << "Found texture coordinates: " << st << endl;	// Debug
+			tempTVertex = new TextureVertex(st);
 		}
 		else if(!dataType.compare("f"))
 		{
