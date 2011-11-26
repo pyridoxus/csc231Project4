@@ -13,12 +13,18 @@ Polygon::Polygon(void)
 
 Polygon::~Polygon()
 {
-	cout << "Polygon Destructor" << endl;
+	//cout << "Polygon Destructor" << endl;	// Debug
+	return;
 }
 
 void Polygon::setPolygon(string face)
 {
-	cout << face << endl;
+//	cout << face << endl;	// Debug
+	int a = 0;
+	while(a < 3)
+	{
+		a++;
+	}
 	return;
 }
 
