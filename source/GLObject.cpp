@@ -3,32 +3,26 @@
 GLObject::GLObject(String objFile)
 {
 	char s[256];
-	String st;
+	String st, dataType;
 	Polygon *tempPoly;
 	fstream file(objFile.c_str(), fstream::in);
 	while(file.good())
 	{
-		file.getline(s, 256, ' ');	// Parse through file
+		file.getline(s, 256);	// Get line
 		st.assign(s);
-		if(!st.compare("v"))
+		dataType = st.split(' ');
+		if(!dataType.compare("v"))
 		{
-			file.getline(s, 256);
-			st.assign(s);
 			// Send remainder of the string to the vertex handler
-			cout << "Found vertex" << endl;
+			cout << "Found vertex: " << st << endl;
 		}
-		if(!st.compare("vt"))
+		else if(!dataType.compare("vt"))
 		{
-			file.getline(s, 256);
-			st.assign(s);
 			// Send remainder of the string to the texture coordinate handler
-			cout << "Found texture coordinates" << endl;
+			cout << "Found texture coordinates: " << st << endl;
 		}
-		if(!st.compare("f"))
+		else if(!dataType.compare("f"))
 		{
-			file.getline(s, 256);
-			st.assign(s);
-//			cout << this->mesh.capacity() << " " << this->mesh.size() << endl;
 			tempPoly = new Polygon(st);
 			this->mesh.push_back(*tempPoly);
 		}
