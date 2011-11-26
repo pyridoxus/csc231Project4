@@ -1,6 +1,6 @@
 #include "Polygon.h"
 
-Polygon::Polygon(string face)
+Polygon::Polygon(String face)
 {
 	this->setPolygon(face);
 	return;
@@ -17,14 +17,14 @@ Polygon::~Polygon()
 	return;
 }
 
-void Polygon::setPolygon(string face)
+void Polygon::setPolygon(String face)
 {
-//	cout << face << endl;	// Debug
-	int a = 0;
-	while(a < 3)
-	{
-		a++;
-	}
+	String p1, p2, p3;
+	cout << face << endl;	// Debug
+	p1 = face.split(' ');
+	p2 = face.split(' ');
+	p3 = face;
+	cout << "p1=" << p1 << " p2=" << p2 << " p3=" << p3 << endl;
 	return;
 }
 

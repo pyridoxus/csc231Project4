@@ -12,9 +12,9 @@ using namespace std;
 // place in directory C:\Program Files\Microsoft Visual Studio 9.0\VC\include\GL
 
 // Using Linux paths and toolchain...
-string texFile = "textures/marble.sgi";
-string envFile = "textures/spheremap.sgi";
-string objFile = "objects/buckyball.obj";
+String texFile = "textures/marble.sgi";
+String envFile = "textures/spheremap.sgi";
+String objFile = "objects/buckyball.obj";
 
 float fov = 45.0;
 float aspect = 1.333;

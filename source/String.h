@@ -3,12 +3,13 @@
 #include <iostream>
 using namespace std;
 
-class String: string
+class String: public string
 {
 	public:
 		String(const char *s);
 		String(void);
-		string split(const char c);	// Split the internal string on the first
+		String(string s);
+		String split(const char c);	// Split the internal string on the first
 																// occurrence of the character c. Return the
 																// left part of the string before c. Internal
 																// string contains the right part of string

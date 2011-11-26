@@ -2,6 +2,7 @@
 #define POLYGON_H_
 #include <iostream>
 using namespace std;
+#include "String.h"
 
 struct Vertex
 {
@@ -16,11 +17,11 @@ class Polygon
 		// 2) Create empty polygon and set the polygon data later using the set
 		//		member function.
 	public:
-		Polygon(string face); // Use string from file to build polygon
+		Polygon(String face); // Use string from file to build polygon
 		Polygon(void); 				// Create an empty polygon
 		virtual ~Polygon();
 		Vertex *getVertex(unsigned int index);	// Return pointer to vertex at index
-		void setPolygon(string face); // Use string from file to setup the polygon
+		void setPolygon(String face); // Use string from file to setup the polygon
 //	Vector3D *getNormal(void);	// Return pointer to polygon normal
 	private:
 		Vertex vertex[3];	// Statically contain 3 vertices for this project

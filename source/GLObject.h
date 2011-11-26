@@ -9,7 +9,7 @@ using namespace std;
 class GLObject
 {
 	public:
-		GLObject(string objFile);
+		GLObject(String objFile);
 		virtual ~GLObject();
 	private:
 // Use Vector 3D for points

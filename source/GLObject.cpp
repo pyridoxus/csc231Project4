@@ -1,9 +1,9 @@
 #include "GLObject.h"
 
-GLObject::GLObject(string objFile)
+GLObject::GLObject(String objFile)
 {
 	char s[256];
-	string st;
+	String st;
 	Polygon *tempPoly;
 	fstream file(objFile.c_str(), fstream::in);
 	while(file.good())
@@ -28,7 +28,7 @@ GLObject::GLObject(string objFile)
 		{
 			file.getline(s, 256);
 			st.assign(s);
-			cout << this->mesh.capacity() << " " << this->mesh.size() << endl;
+//			cout << this->mesh.capacity() << " " << this->mesh.size() << endl;
 			tempPoly = new Polygon(st);
 			this->mesh.push_back(*tempPoly);
 		}
