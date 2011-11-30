@@ -5,6 +5,7 @@
 using namespace std;
 #include <GL/glut.h>
 #include <GL/glext.h>
+#include <stdlib.h>
 #include "readSGI.h"
 #include "GLObject.h"
 

@@ -6,6 +6,7 @@ GLObject::GLObject(String objFile)
 	String st, dataType;
 	Polygon tempPoly;
 	TextureVertex tempTVertex;
+	Point tempPoint;
 	fstream file(objFile.c_str(), fstream::in);
 	while(file.good())
 	{
@@ -14,8 +15,8 @@ GLObject::GLObject(String objFile)
 		dataType = st.split(' ');
 		if(!dataType.compare("v"))
 		{
-			// Send remainder of the string to the vertex handler
-			cout << "Found vertex: " << st << endl;
+			tempPoint.setPoint(st);	// Process string into floats
+			this->points.push_back(tempPoint);		// Store the floats
 		}
 		else if(!dataType.compare("vt"))
 		{
@@ -44,19 +45,26 @@ GLObject::~GLObject()
 void GLObject::print(void)
 {
   vector<TextureVertex>::iterator tviter;
-  vector<Polygon>::iterator piter;
+  vector<Polygon>::iterator polyIter;
+  vector<Point>::iterator pointIter;
   int a;
 
+  for(pointIter = this->points.begin(); pointIter < this->points.end();
+  		pointIter++)
+  {
+  	cout << "(" << pointIter->getX() << ", " << pointIter->getY() << ", " << \
+  			pointIter->getZ()<< ")" << endl;
+  }
   for(tviter = this->tvertex.begin(); tviter < this->tvertex.end(); tviter++)
   {
   	cout << "(" << tviter->getU() << ", " << tviter->getV() << ")" << endl;
   }
-  for(piter = this->mesh.begin(); piter < this->mesh.end(); piter++)
+  for(polyIter = this->mesh.begin(); polyIter < this->mesh.end(); polyIter++)
   {
   	for(a = 0; a < 3; a++)
   	{
-  		cout << piter->getVertex(a)->pointIndex << "/";
-  		cout << piter->getVertex(a)->textureIndex;
+  		cout << polyIter->getVertex(a)->pointIndex << "/";
+  		cout << polyIter->getVertex(a)->textureIndex;
   		if(a < 2) cout << ", ";
   		else cout << endl;
   	}
