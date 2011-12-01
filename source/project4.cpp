@@ -72,6 +72,11 @@ void myDraw()
 
 	// Draw scene
   glColor3f(1.0, 1.0, 1.0);
+  drawLight();
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+  glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
+  glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
   glObject.draw();
   cout << "Draw" << endl;
   // Swap buffers
@@ -143,18 +148,51 @@ void specialKeyFunc( int key, int x, int y )
 {
 	switch(key)
 	{
-		case GLUT_KEY_LEFT:		// Translate along –x axis
+		case GLUT_KEY_LEFT:			// translate along -x axis
+			light_position[0]--;
 		break;
-		case GLUT_KEY_RIGHT:	// Translate along +x axis
+		case GLUT_KEY_RIGHT:		// translate along +x axis
+			light_position[0]++;
 		break;
-		case GLUT_KEY_DOWN:		// Translate along –y axis
+		case GLUT_KEY_DOWN:			// translate along -y axis
+			light_position[1]--;
 		break;
-		case GLUT_KEY_UP:			// Translate along +y axis
+		case GLUT_KEY_UP:			  // translate along +y axis
+			light_position[1]++;
 		break;
-		case GLUT_KEY_PAGE_UP:	// Translate along –z axis
+		case GLUT_KEY_PAGE_UP:  // translate along -z axis
+			light_position[2]--;
 		break;
-		case GLUT_KEY_PAGE_DOWN:	// Translate along +z axis	}
+		case GLUT_KEY_PAGE_DOWN:// translate along +z axis
+			light_position[2]++;
 		break;
 	}
+	// Redraw the scene
+  glutPostRedisplay();
 	return;
+}
+
+void drawLight(void)
+{
+  glPushMatrix();
+  glLoadName( LIGHT );      // Load picking id
+  glTranslatef( light_position[0], light_position[1], light_position[2] );
+  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+	// Draw light
+  if(glIsEnabled(GL_LIGHT0))
+  {
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, ob_diffuse_on);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, ob_specular);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ob_ambient_on);
+    glutSolidSphere( 0.5, 10, 10 );
+  }
+  else
+  {
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, ob_diffuse_off);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, ob_specular);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ob_ambient_off);
+		glutWireSphere(0.5, 10, 10);
+  }
+  glPopMatrix();
+  return;
 }
