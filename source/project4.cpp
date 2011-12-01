@@ -9,7 +9,7 @@ int main( int argc, char **argv )
   // Initialize window system
   glutInit( &argc, argv );
   glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH );
-  glutInitWindowSize( 640, 480 );
+  glutInitWindowSize( 800, 600 );
   glutCreateWindow( "Project 4" );
 
   // Projection
@@ -26,10 +26,17 @@ int main( int argc, char **argv )
   glEnable( GL_DEPTH_TEST );
 
 	// Select shading model
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  glShadeModel(GL_SMOOTH);
 
 	// Define lights
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
 
 	// Enable lighting model
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
 
 	// Texture creation
 
@@ -64,7 +71,9 @@ void myDraw()
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
 	// Draw scene
-
+  glColor3f(1.0, 1.0, 1.0);
+  glObject.draw();
+  cout << "Draw" << endl;
   // Swap buffers
   glutSwapBuffers();
 }

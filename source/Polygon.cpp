@@ -45,3 +45,8 @@ Vertex *Polygon::getVertex(unsigned int index)
 	return this->vertex + index;
 }
 
+void Polygon::draw(void)
+{
+
+	return;
+}

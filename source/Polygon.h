@@ -3,6 +3,8 @@
 #include <iostream>
 using namespace std;
 #include "String.h"
+#include <GL/glut.h>
+#include <GL/glext.h>
 
 struct Vertex
 {
@@ -22,6 +24,7 @@ class Polygon
 		virtual ~Polygon();
 		Vertex *getVertex(unsigned int index);	// Return pointer to vertex at index
 		void setPolygon(String face); // Use string from file to setup the polygon
+		void draw(void);
 //	Vector3D *getNormal(void);	// Return pointer to polygon normal
 	private:
 		Vertex vertex[3];	// Statically contain 3 vertices for this project

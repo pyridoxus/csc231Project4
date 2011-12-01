@@ -14,6 +14,7 @@ class GLObject
 		GLObject(String objFile);
 		virtual ~GLObject();
 		void print(void);	// Debug... print the contents of the vectors
+		void draw(void);
 	private:
 		vector <Polygon> mesh;
 		vector <TextureVertex> tvertex;

@@ -1,10 +1,3 @@
-/*
- * Point.cpp
- *
- *  Created on: Nov 30, 2011
- *      Author: pyridoxus
- */
-
 #include "Point.h"
 #include <stdlib.h>
 

@@ -3,8 +3,6 @@
 
 #include <iostream>
 using namespace std;
-#include <GL/glut.h>
-#include <GL/glext.h>
 #include <stdlib.h>
 #include "readSGI.h"
 #include "GLObject.h"
@@ -16,6 +14,13 @@ using namespace std;
 String texFile = "textures/marble.sgi";
 String envFile = "textures/spheremap.sgi";
 String objFile = "objects/buckyball.obj";
+
+// Initial light position
+GLfloat light_position[] = { 5.0, 5.0, 5.0, 0.0 };
+
+// Light properties
+GLfloat light_diffuse[] = { 0.7, 0.7, 0.2, 1.0 };
+GLfloat light_ambient[] = { 0.05, 0.05, 0.05, 1.0 };
 
 float fov = 45.0;
 float aspect = 1.333;

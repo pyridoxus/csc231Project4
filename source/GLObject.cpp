@@ -39,6 +39,7 @@ GLObject::~GLObject()
 	cout << "Object destructor" << endl;
 	this->mesh.clear();	// Calls the mesh destructors.
 	this->tvertex.clear();	// Calls the tvertex destructors.
+	this->points.clear();	// Calls the point destructors.
 	return;
 }
 
@@ -69,6 +70,27 @@ void GLObject::print(void)
   		else cout << endl;
   	}
   }
-
-
 }
+
+void GLObject::draw(void)
+{
+  vector<Polygon>::iterator polyIter;
+	int pidx, a;
+	Point p;
+  for(polyIter = this->mesh.begin(); polyIter < this->mesh.end(); polyIter++)
+  {
+//  	cout << "Polygon:" << endl;
+  	glBegin(GL_POLYGON);
+  	for(a = 0; a < 3; a++)
+  	{
+  		pidx = polyIter->getVertex(a)->pointIndex;
+  		p = this->points[pidx];
+//  		cout << "(" << p.getX() << ", " << p.getY() << ", " << p.getZ() << ")" << endl;
+  		glVertex3f( p.getX(), p.getY(), p.getZ());
+  	}
+  	glEnd();
+  	glFlush();
+  }
+	return;
+}
+
