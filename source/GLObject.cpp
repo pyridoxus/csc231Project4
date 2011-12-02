@@ -26,6 +26,7 @@ GLObject::GLObject(String objFile)
 		else if(!dataType.compare("f"))
 		{
 			tempPoly.setPolygon(st);	// Process string into indices (vertex/texture)
+			this->calcNormal(&tempPoly);	// Find the normal
 			this->mesh.push_back(tempPoly);	// Store indices
 		}
 	}
@@ -77,10 +78,13 @@ void GLObject::draw(void)
   vector<Polygon>::iterator polyIter;
 	int pidx, a;
 	Point p;
+	Vector3D *n;
   for(polyIter = this->mesh.begin(); polyIter < this->mesh.end(); polyIter++)
   {
 //  	cout << "Polygon:" << endl;
   	glBegin(GL_POLYGON);
+  	n = polyIter->getNormal();
+  	glNormal3f(n->getX(), n->getY(), n->getZ());
   	for(a = 0; a < 3; a++)
   	{
   		pidx = polyIter->getVertex(a)->pointIndex;
@@ -94,3 +98,16 @@ void GLObject::draw(void)
 	return;
 }
 
+void GLObject::calcNormal(Polygon *poly)	// Calculate normal of the polygon
+{
+	Vector3D a, b, c;
+	int va, vb, vc;
+	va = poly->getVertex(0)->pointIndex;	// Index to first point in polygon
+	vb = poly->getVertex(1)->pointIndex;	// Index to second point in polygon
+	vc = poly->getVertex(2)->pointIndex;	// Index to third point in polygon
+	a = this->points[vb] - this->points[va];
+	b = this->points[vc] - this->points[vb];
+	c = a / b;	// Cross product
+	poly->setNormal(c);
+	return;
+}

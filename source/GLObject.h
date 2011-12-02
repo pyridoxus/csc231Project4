@@ -19,6 +19,7 @@ class GLObject
 		vector <Polygon> mesh;
 		vector <TextureVertex> tvertex;
 		vector <Point> points;
+		void calcNormal(Polygon *poly);	// Calculate the normal of the polygon
 };
 
 #endif

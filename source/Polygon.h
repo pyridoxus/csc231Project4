@@ -5,6 +5,7 @@ using namespace std;
 #include "String.h"
 #include <GL/glut.h>
 #include <GL/glext.h>
+#include "Vector3D.h"
 
 struct Vertex
 {
@@ -24,11 +25,11 @@ class Polygon
 		virtual ~Polygon();
 		Vertex *getVertex(unsigned int index);	// Return pointer to vertex at index
 		void setPolygon(String face); // Use string from file to setup the polygon
-		void draw(void);
-//	Vector3D *getNormal(void);	// Return pointer to polygon normal
+		Vector3D *getNormal(void);	// Return pointer to polygon normal
+		void setNormal(Vector3D &norm);	// Set the normal (and normalize)
 	private:
 		Vertex vertex[3];	// Statically contain 3 vertices for this project
-//	Vector3D normal;	// Hold the polygon normal
+		Vector3D normal;	// Hold the polygon normal
 };
 
 #endif

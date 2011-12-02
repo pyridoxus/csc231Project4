@@ -45,8 +45,14 @@ Vertex *Polygon::getVertex(unsigned int index)
 	return this->vertex + index;
 }
 
-void Polygon::draw(void)
+Vector3D *Polygon::getNormal(void)
 {
+	return &this->normal;
+}
 
+void Polygon::setNormal(Vector3D &norm)	// Set the normal (and normalize)
+{
+	this->normal.set(norm);
+	this->normal.normalize();
 	return;
 }
