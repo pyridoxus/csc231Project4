@@ -32,6 +32,8 @@ GLObject::GLObject(String objFile)
 	}
 	cout << "Number of polygons: " << this->mesh.size() << endl;
 	file.close();
+	this->spinMode = 0;
+	this->angleY = 0.0;
 	return;
 }
 
@@ -79,10 +81,13 @@ void GLObject::draw(void)
 	int pidx, a;
 	Point p;
 	Vector3D *n;
+	glMatrixMode( GL_MODELVIEW );
+	glPushMatrix();
+	this->setSpin();
   for(polyIter = this->mesh.begin(); polyIter < this->mesh.end(); polyIter++)
   {
 //  	cout << "Polygon:" << endl;
-  	glBegin(GL_POLYGON);
+  	glBegin(this->drawMode);
   	n = polyIter->getNormal();
   	glNormal3f(n->getX(), n->getY(), n->getZ());
   	for(a = 0; a < 3; a++)
@@ -95,6 +100,7 @@ void GLObject::draw(void)
   	glEnd();
   	glFlush();
   }
+	glPopMatrix();
 	return;
 }
 
@@ -109,5 +115,37 @@ void GLObject::calcNormal(Polygon *poly)	// Calculate normal of the polygon
 	b = this->points[vc] - this->points[vb];
 	c = a / b;	// Cross product
 	poly->setNormal(c);
+	return;
+}
+
+void GLObject::setDrawMode(int mode)
+{
+	this->drawMode = mode;
+	return;
+}
+
+void GLObject::spinY(int mode)
+{
+	this->spinMode = mode;
+	return;
+}
+
+void GLObject::setSpin(void)
+{
+	switch(this->spinMode)
+	{
+		case -1:
+			this->angleY = 0.0;
+			this->spinMode = 0;
+			break;
+		case 0:
+			this->angleY = 0.0;
+			break;
+		case 1:
+			this->angleY += 1.0;
+			break;
+	}
+	glRotatef(this->angleY, 0.0, 1.0, 0.0);
+	cout << this->angleY << endl;
 	return;
 }

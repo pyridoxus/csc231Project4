@@ -30,8 +30,8 @@ void Polygon::setPolygon(String face)
 	for(a = 0; a < 3; a++)
 	{
 		p[3] = p[a].split('/');	// Store the string version of point index
-		this->vertex[a].pointIndex = atoi(p[3].c_str());
-		this->vertex[a].textureIndex = atoi(p[a].c_str()); // Convert texture index
+		this->vertex[a].pointIndex = atoi(p[3].c_str()) - 1;
+		this->vertex[a].textureIndex = atoi(p[a].c_str()) - 1;
 //		cout << "p" << a + 1 << "= " << this->vertex[a].pointIndex << "/";
 //		cout << this->vertex[a].textureIndex << " ";
 	}

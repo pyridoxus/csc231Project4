@@ -15,11 +15,17 @@ class GLObject
 		virtual ~GLObject();
 		void print(void);	// Debug... print the contents of the vectors
 		void draw(void);
+		void setDrawMode(int mode);
+		void spinY(int mode);
 	private:
 		vector <Polygon> mesh;
 		vector <TextureVertex> tvertex;
 		vector <Point> points;
+		int drawMode;
+		int spinMode;
+		float angleY;
 		void calcNormal(Polygon *poly);	// Calculate the normal of the polygon
+		void setSpin(void);	// Set angle of spin (or reset) based on state
 };
 
 #endif

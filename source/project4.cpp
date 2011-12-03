@@ -93,12 +93,15 @@ void keyboard( unsigned char key, int x, int y )
       exit(1);
     break;
     case 'p':		// display as points
+    	glObject.setDrawMode(GL_POINTS);
     break;
     case 'w':		// display as wireframe
+    	glObject.setDrawMode(GL_LINES);
     break;
     case 'h':		// display as hidden-surface wireframe
     break;
     case 'm':		// display as polygons
+    	glObject.setDrawMode(GL_POLYGON);
     break;
     case 's':		// toggle flat/smooth shading
     break;
@@ -109,10 +112,13 @@ void keyboard( unsigned char key, int x, int y )
     case 'b':		// display with 2D and Environment texture
     break;
     case 'A':		// start animated spin about Y axis
+    	glObject.spinY(1);
     break;
     case 'S':		// stop animated spin about Y axis
+    	glObject.spinY(0);
     break;
     case 'R':		// reset animated spin about Y axis
+    	glObject.spinY(-1);
     break;
  	}
 
