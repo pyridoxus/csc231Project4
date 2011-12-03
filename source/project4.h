@@ -18,7 +18,7 @@ String envFile = "textures/spheremap.sgi";
 String objFile = "objects/buckyball.obj";
 
 // Initial light position
-GLfloat light_position[] = { 5.0, 5.0, -5.0, 0.0 };
+GLfloat light_position[] = { 3.0, 3.0, 3.0, 0.0 };
 
 // Light properties
 GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };

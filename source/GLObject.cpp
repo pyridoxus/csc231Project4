@@ -138,14 +138,13 @@ void GLObject::setSpin(void)
 			this->angleY = 0.0;
 			this->spinMode = 0;
 			break;
-		case 0:
-			this->angleY = 0.0;
-			break;
 		case 1:
 			this->angleY += 1.0;
+		case 0:
+			glRotatef(this->angleY, 0.0, 1.0, 0.0);
+		  // Redraw the scene
+		  glutPostRedisplay();
 			break;
 	}
-	glRotatef(this->angleY, 0.0, 1.0, 0.0);
-	cout << this->angleY << endl;
 	return;
 }
