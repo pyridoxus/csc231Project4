@@ -102,6 +102,7 @@ void keyboard( unsigned char key, int x, int y )
     	glObject.setDrawMode(POLYGON);
     break;
     case 's':		// toggle flat/smooth shading
+    	glObject.toggleSmooth();
     break;
     case 't':		// display with 2D texture
     	glObject.setDrawMode(TEXTURE);

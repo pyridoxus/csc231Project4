@@ -48,6 +48,7 @@ GLObject::GLObject(String objFile)
 	this->spinMode = 0;
 	this->angleY = 0.0;
 	this->drawMode = POINTS;
+	this->smooth = 0;
 	for(int a = 0; a < 3; a++)
 	{
 		bg[a] = 0.5;
@@ -109,12 +110,20 @@ void GLObject::draw(void)
 		for(polyIter = this->mesh.begin(); polyIter < this->mesh.end(); polyIter++)
 		{
 			glBegin(glMode);
-			n = polyIter->getNormal();
-			glNormal3f(n->getX(), n->getY(), n->getZ());
+			if(!this->smooth)
+			{
+				n = polyIter->getNormal();
+				glNormal3f(n->getX(), n->getY(), n->getZ());
+			}
 			for(a = 0; a < 3; a++)
 			{
 				pidx = polyIter->getVertex(a)->pointIndex;
 				p = this->points[pidx];
+				if(this->smooth)
+				{
+					n = p.getVertexNormal();
+					glNormal3f(n->getX(), n->getY(), n->getZ());
+				}
 				glVertex3f( p.getX(), p.getY(), p.getZ());
 			}
 			glEnd();
@@ -292,5 +301,11 @@ void GLObject::setMaterial(int hidden)
 		glMaterialfv(GL_FRONT, GL_AMBIENT, h_ambient);
 		glColor3f(this->bg[0], this->bg[1], this->bg[2]);
 	}
+	return;
+}
+
+void GLObject::toggleSmooth(void)
+{
+	this->smooth = ~this->smooth;
 	return;
 }

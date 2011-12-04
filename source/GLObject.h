@@ -18,6 +18,7 @@ class GLObject
 		void draw(void);
 		void setDrawMode(int mode);
 		void spinY(int mode);
+		void toggleSmooth(void);
 	private:
 		vector <Polygon> mesh;
 		vector <TextureVertex> tvertex;
@@ -25,13 +26,14 @@ class GLObject
 		int drawMode;
 		int spinMode;
 		float angleY;
+		float bg[3];
+		float fg[3];
+		int smooth;
 		void calcPolygonNormal(Polygon *poly);	// Calculate the normal of polygon
 		void calcVertexNormals(void);	// Calculate the normal of vertices
 		void setSpin(void);	// Set angle of spin (or reset) based on state
 		int getGLMode(int order);	// return the GL draw mode based on order
 		void setMaterial(int hidden);		// set the material for GL
-		float bg[3];
-		float fg[3];
 };
 
 

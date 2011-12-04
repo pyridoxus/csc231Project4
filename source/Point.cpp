@@ -40,10 +40,9 @@ void Point::setVertexNormal(Vector3D *v)	// Set the vertex normal at this point
 	return;
 }
 
-void Point::getVertexNormal(Vector3D *v)		// Return pointer to vertex normal
+Vector3D *Point::getVertexNormal(void)		// Return pointer to vertex normal
 {
-	v->set(this->vertexNormal);
-	return;
+	return &this->vertexNormal;
 }
 
 int Point::isVertexNormalDone(void)					// Return non-zero if calculated
