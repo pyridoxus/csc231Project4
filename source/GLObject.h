@@ -9,6 +9,11 @@ using namespace std;
 #include "Point.h"
 #include "drawModes.h"
 
+// Image data
+#define MARBLE	 			0
+#define ENVIRON_IMG	 	1
+#define NUM_TEXTURES	2
+
 class GLObject
 {
 	public:
@@ -19,6 +24,7 @@ class GLObject
 		void setDrawMode(int mode);
 		void spinY(int mode);
 		void toggleSmooth(void);
+		GLuint texName[ NUM_TEXTURES ];
 	private:
 		vector <Polygon> mesh;
 		vector <TextureVertex> tvertex;

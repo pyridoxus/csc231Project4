@@ -98,8 +98,9 @@ void GLObject::print(void)
 void GLObject::draw(void)
 {
   vector<Polygon>::iterator polyIter;
-	int pidx, a, glMode, b;
+	int pidx, a, glMode, b, tidx;
 	Point p;
+	TextureVertex t;
 	Vector3D *n;
 	glMatrixMode( GL_MODELVIEW );
 	glPushMatrix();
@@ -124,6 +125,12 @@ void GLObject::draw(void)
 					n = p.getVertexNormal();
 					glNormal3f(n->getX(), n->getY(), n->getZ());
 				}
+				if((this->drawMode == TEXTURE) || (this->drawMode == ENVIRONMENT))
+				{
+					tidx = polyIter->getVertex(a)->textureIndex;
+					t = this->tvertex[tidx];
+					glTexCoord2f(t.getU(), t.getV());
+				}
 				glVertex3f( p.getX(), p.getY(), p.getZ());
 			}
 			glEnd();
@@ -131,7 +138,14 @@ void GLObject::draw(void)
 		// The only reason to do this loop again is if we are doing hidden surface
 		// wireframe. The getGLMode function defaults to returning GL_POINTS if
 		// there is no second type of drawing, so break out of the loop.
-		if(this->getGLMode(1) == GL_POINTS) break;
+		switch(this->drawMode)
+		{
+			case POINTS:
+			case WIREFRAME:
+			case POLYGON:
+				b = 2;	// Cheesy way to break the loop
+			break;
+		}
 	}
 	glPopMatrix();
 	glEnable(GL_LIGHTING);	// Some modes turn off lighting
@@ -267,10 +281,21 @@ int GLObject::getGLMode(int order)	// return the GL draw mode based on order
 					break;
 			}
 		break;
-		case POLYGON:
 		case TEXTURE:
+			switch(order)
+			{
+				case 0:
+					glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+					glEnable( GL_TEXTURE_2D );
+					glBindTexture( GL_TEXTURE_2D, this->texName[MARBLE] );
+				break;
+				case 1:
+					glDisable( GL_TEXTURE_2D );
+				break;
+			}
 		case ENVIRONMENT:
 		case TEXTURE | ENVIRONMENT:
+		case POLYGON:
 			if(order == 0)
 			{
 				a = GL_POLYGON;
