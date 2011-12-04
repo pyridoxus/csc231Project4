@@ -18,8 +18,6 @@ class GLObject
 		void draw(void);
 		void setDrawMode(int mode);
 		void spinY(int mode);
-		float factor;	// For debugging hidden surface wire frame
-		float units;
 	private:
 		vector <Polygon> mesh;
 		vector <TextureVertex> tvertex;
@@ -31,6 +29,7 @@ class GLObject
 		void setSpin(void);	// Set angle of spin (or reset) based on state
 		int getGLMode(int order);	// return the GL draw mode based on order
 		void setMaterial(int hidden);		// set the material for GL
+		void drawHidden(vector<Polygon>::iterator polyIter, int glMode);
 		float bg[3];
 		float fg[3];
 };

@@ -121,18 +121,6 @@ void keyboard( unsigned char key, int x, int y )
     case 'R':		// reset animated spin about Y axis
     	glObject.spinY(-1);
     break;
-    case 'z':
-    	glObject.factor -= 0.1;
-    break;
-    case 'x':
-    	glObject.factor += 0.1;
-    break;
-    case 'c':
-    	glObject.units -= 0.1;
-    break;
-    case 'v':
-    	glObject.units += 0.1;
-    break;
  	}
 
   // Redraw the scene
