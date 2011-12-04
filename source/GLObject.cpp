@@ -42,6 +42,7 @@ GLObject::GLObject(String objFile)
 			this->mesh.push_back(tempPoly);	// Store indices
 		}
 	}
+	this->calcVertexNormals();
 	cout << "Number of polygons: " << this->mesh.size() << endl;
 	file.close();
 	this->spinMode = 0;
@@ -140,6 +141,48 @@ void GLObject::calcPolygonNormal(Polygon *poly)	// Calculate normal of polygon
 	b = this->points[vc] - this->points[vb];
 	c = a / b;	// Cross product
 	poly->setNormal(c);
+	return;
+}
+
+void GLObject::calcVertexNormals(void)
+{
+	vector<Polygon>::iterator polyIter1;
+	vector<Polygon>::iterator polyIter2;
+	Point *point1;
+	int pidx1;
+	int pidx2;
+	int a, b;
+	Vector3D v;
+	Vector3D *n1;
+	for(polyIter1 = this->mesh.begin(); polyIter1 < this->mesh.end() - 1;
+			polyIter1++)
+	{
+		for(a = 0; a < 3; a++)
+		{
+			pidx1 = polyIter1->getVertex(a)->pointIndex;	// Index to current point
+			point1 = &this->points[pidx1];	// Point to current point
+			if(!point1->isVertexNormalDone())
+			{
+				n1 = polyIter1->getNormal();
+				v.set(*n1);	// Initialize with current polygon normal
+				for(polyIter2 = polyIter1 + 1; polyIter2 < this->mesh.end();
+						polyIter2++)
+				{
+					for(b = 0; b < 3; b++)
+					{
+						pidx2 = polyIter2->getVertex(b)->pointIndex;// Index to other point
+						if(pidx1 == pidx2)	// Found point in this polygon?
+						{
+							n1 = polyIter2->getNormal();
+							v = v + *n1;
+						}
+					}
+				}
+				v.normalize();
+				point1->setVertexNormal(&v);
+			}
+		}
+	}
 	return;
 }
 
