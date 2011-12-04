@@ -96,43 +96,36 @@ void GLObject::print(void)
 void GLObject::draw(void)
 {
   vector<Polygon>::iterator polyIter;
-	int glMode;
+	int pidx, a, glMode, b;
+	Point p;
+	Vector3D *n;
 	glMatrixMode( GL_MODELVIEW );
 	glPushMatrix();
 	this->setSpin();
-	for(polyIter = this->mesh.begin(); polyIter < this->mesh.end(); polyIter++)
+	for(b = 0; b < 2; b++)
 	{
-		glMode = this->getGLMode(0);
-		this->drawHidden(polyIter, glMode);
+		glMode = this->getGLMode(b);
+		for(polyIter = this->mesh.begin(); polyIter < this->mesh.end(); polyIter++)
+		{
+			glBegin(glMode);
+			n = polyIter->getNormal();
+			glNormal3f(n->getX(), n->getY(), n->getZ());
+			for(a = 0; a < 3; a++)
+			{
+				pidx = polyIter->getVertex(a)->pointIndex;
+				p = this->points[pidx];
+				glVertex3f( p.getX(), p.getY(), p.getZ());
+			}
+			glEnd();
+		}
 		// The only reason to do this loop again is if we are doing hidden surface
 		// wireframe. The getGLMode function defaults to returning GL_POINTS if
-		// there is no second type of drawing, or GL_LINES if drawing the line part
-		// of hidden surface wire frame.
-		glMode = this->getGLMode(1);
-		if(glMode == GL_LINES) this->drawHidden(polyIter, glMode);
+		// there is no second type of drawing, so break out of the loop.
+		if(this->getGLMode(1) == GL_POINTS) break;
 	}
 	glPopMatrix();
 	glEnable(GL_LIGHTING);	// Some modes turn off lighting
   glFlush();
-	return;
-}
-
-void GLObject::drawHidden(vector<Polygon>::iterator polyIter, int glMode)
-{
-	int pidx, a;
-	Vector3D *n;
-	Point p;
-
-	glBegin(glMode);
-	n = polyIter->getNormal();
-	glNormal3f(n->getX(), n->getY(), n->getZ());
-	for(a = 0; a < 3; a++)
-	{
-		pidx = polyIter->getVertex(a)->pointIndex;
-		p = this->points[pidx];
-		glVertex3f( p.getX(), p.getY(), p.getZ());
-	}
-	glEnd();
 	return;
 }
 
@@ -197,11 +190,10 @@ int GLObject::getGLMode(int order)	// return the GL draw mode based on order
 		case WIREFRAME:
 			if(order == 0)
 			{
-				a = GL_LINES;
+				a = GL_LINE_LOOP;
 				glDisable(GL_LIGHTING);
 				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 				this->setMaterial(false);
-				glLineWidth(1.0);
 			}
 		break;
 		case WIREFRAME | HIDDENSURFACE:
@@ -216,11 +208,10 @@ int GLObject::getGLMode(int order)	// return the GL draw mode based on order
 					this->setMaterial(true);
 				break;
 				case 1:
-					a = GL_LINES;
+					a = GL_LINE_LOOP;
 					glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 					this->setMaterial(false);
 					glDisable(GL_POLYGON_OFFSET_FILL);
-					glLineWidth(2.0);
 					break;
 			}
 		break;
