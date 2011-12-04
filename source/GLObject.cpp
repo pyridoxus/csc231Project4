@@ -1,5 +1,17 @@
 #include "GLObject.h"
 
+// Specify material properties
+GLfloat ambient[] = { 0.2, 0.2, 0.2, 1.0 };
+GLfloat diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat specular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat shininess[] = { 100.0 };
+// Specify hidden surface properties
+GLfloat h_ambient[] = { 0.0, 0.0, 0.0, 1.0 };
+GLfloat h_diffuse[] = { 0.5, 0.5, 0.5, 1.0 };
+GLfloat h_specular[] = { 0.0, 0.0, 0.0, 1.0 };
+GLfloat h_shininess[] = { 0.0 };
+
+
 GLObject::GLObject(String objFile)
 {
 	char s[256];
@@ -35,6 +47,12 @@ GLObject::GLObject(String objFile)
 	this->spinMode = 0;
 	this->angleY = 0.0;
 	this->drawMode = POINTS;
+	for(int a = 0; a < 3; a++)
+	{
+		bg[a] = 0.5;
+		fg[a] = 1.0;
+	}
+	this->factor = this->units = 1.0;
 	return;
 }
 
@@ -79,30 +97,36 @@ void GLObject::print(void)
 void GLObject::draw(void)
 {
   vector<Polygon>::iterator polyIter;
-	int pidx, a, glMode;
+	int pidx, a, glMode, b;
 	Point p;
 	Vector3D *n;
 	glMatrixMode( GL_MODELVIEW );
 	glPushMatrix();
 	this->setSpin();
-	glMode = this->getGLMode(0);
-  for(polyIter = this->mesh.begin(); polyIter < this->mesh.end(); polyIter++)
-  {
-//  	cout << "Polygon:" << endl;
-  	glBegin(glMode);
-  	n = polyIter->getNormal();
-  	glNormal3f(n->getX(), n->getY(), n->getZ());
-  	for(a = 0; a < 3; a++)
-  	{
-  		pidx = polyIter->getVertex(a)->pointIndex;
-  		p = this->points[pidx];
-//  		cout << "(" << p.getX() << ", " << p.getY() << ", " << p.getZ() << ")" << endl;
-  		glVertex3f( p.getX(), p.getY(), p.getZ());
-  	}
-  	glEnd();
-//  	glFlush();
-  }
+	for(b = 0; b < 2; b++)
+	{
+		glMode = this->getGLMode(b);
+		for(polyIter = this->mesh.begin(); polyIter < this->mesh.end(); polyIter++)
+		{
+			glBegin(glMode);
+			n = polyIter->getNormal();
+			glNormal3f(n->getX(), n->getY(), n->getZ());
+			for(a = 0; a < 3; a++)
+			{
+				pidx = polyIter->getVertex(a)->pointIndex;
+				p = this->points[pidx];
+				glVertex3f( p.getX(), p.getY(), p.getZ());
+			}
+			glEnd();
+		}
+		// The only reason to do this loop again is if we are doing hidden surface
+		// wireframe. The getGLMode function defaults to returning GL_POINTS if
+		// there is no second type of drawing, so break out of the loop.
+		if(this->getGLMode(1) == GL_POINTS) break;
+	}
 	glPopMatrix();
+	glEnable(GL_LIGHTING);	// Some modes turn off lighting
+  glFlush();
 	return;
 }
 
@@ -157,21 +181,75 @@ int GLObject::getGLMode(int order)	// return the GL draw mode based on order
 	switch(this->drawMode)
 	{
 		case POINTS:	// From drawmodes.h
-			a = GL_POINTS;
+			if(order == 0)
+			{
+				a = GL_POINTS;
+				glDisable(GL_LIGHTING);
+				this->setMaterial(false);
+			}
 		break;
 		case WIREFRAME:
-			a = GL_LINES;
+			if(order == 0)
+			{
+				a = GL_LINES;
+				glDisable(GL_LIGHTING);
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+				this->setMaterial(false);
+			}
 		break;
 		case WIREFRAME | HIDDENSURFACE:
-			if(order == 0) a = GL_LINES;
-			if(order == 1) a = GL_POLYGON;
+			switch(order)
+			{
+				case 0:
+					a = GL_POLYGON;
+					glDisable(GL_LIGHTING);
+					glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+					glEnable(GL_POLYGON_OFFSET_FILL);
+					glPolygonOffset(this->factor, this->units);
+					cout << "Factor: " << this->factor << " Units: " << this->units << endl;
+					this->setMaterial(true);
+				break;
+				case 1:
+					a = GL_LINES;
+					glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+					this->setMaterial(false);
+					glDisable(GL_POLYGON_OFFSET_FILL);
+				break;
+			}
 		break;
 		case POLYGON:
 		case TEXTURE:
 		case ENVIRONMENT:
 		case TEXTURE | ENVIRONMENT:
-			a = GL_POLYGON;
+			if(order == 0)
+			{
+				a = GL_POLYGON;
+				glEnable(GL_LIGHTING);
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+				this->setMaterial(false);
+			}
 		break;
 	}
 	return a;
+}
+
+void GLObject::setMaterial(int hidden)
+{
+	if(!hidden)
+	{
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+		glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
+		glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
+		glColor3f(this->fg[0], this->fg[1], this->fg[2]);
+	}
+	else
+	{
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, h_diffuse);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, h_specular);
+		glMaterialfv(GL_FRONT, GL_SHININESS, h_shininess);
+		glMaterialfv(GL_FRONT, GL_AMBIENT, h_ambient);
+		glColor3f(this->bg[0], this->bg[1], this->bg[2]);
+	}
+	return;
 }

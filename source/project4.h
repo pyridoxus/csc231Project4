@@ -31,13 +31,7 @@ GLfloat ob_specular[] = { 0.0, 0.0, 0.0, 1.0 };
 GLfloat ob_ambient_on[] = { 7.0, 7.0, 2.0, 1.0 };
 GLfloat ob_ambient_off[] = { 7.0, 7.0, 7.0, 1.0 };
 
-// Specify material properties
-GLfloat ambient[] = { 0.2, 0.2, 0.2, 1.0 };
-GLfloat diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-GLfloat specular[] = { 1.0, 1.0, 1.0, 1.0 };
-GLfloat shininess[] = { 100.0 };
-
-float fov = 45.0;
+float fov = 30.0;
 float aspect = 1.333;
 float nearClip = 0.01;
 float farClip = 10000.0;

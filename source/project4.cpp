@@ -72,11 +72,8 @@ void myDraw()
 
 	// Draw scene
   glColor3f(1.0, 1.0, 1.0);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   drawLight();
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
-  glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
-  glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
-  glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
   glObject.draw();
 //  cout << "Draw" << endl;
   // Swap buffers
@@ -123,6 +120,18 @@ void keyboard( unsigned char key, int x, int y )
     break;
     case 'R':		// reset animated spin about Y axis
     	glObject.spinY(-1);
+    break;
+    case 'z':
+    	glObject.factor -= 0.1;
+    break;
+    case 'x':
+    	glObject.factor += 0.1;
+    break;
+    case 'c':
+    	glObject.units -= 0.1;
+    break;
+    case 'v':
+    	glObject.units += 0.1;
     break;
  	}
 
