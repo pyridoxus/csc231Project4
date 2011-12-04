@@ -34,6 +34,7 @@ GLObject::GLObject(String objFile)
 	file.close();
 	this->spinMode = 0;
 	this->angleY = 0.0;
+	this->drawMode = POINTS;
 	return;
 }
 
@@ -78,16 +79,17 @@ void GLObject::print(void)
 void GLObject::draw(void)
 {
   vector<Polygon>::iterator polyIter;
-	int pidx, a;
+	int pidx, a, glMode;
 	Point p;
 	Vector3D *n;
 	glMatrixMode( GL_MODELVIEW );
 	glPushMatrix();
 	this->setSpin();
+	glMode = this->getGLMode(0);
   for(polyIter = this->mesh.begin(); polyIter < this->mesh.end(); polyIter++)
   {
 //  	cout << "Polygon:" << endl;
-  	glBegin(this->drawMode);
+  	glBegin(glMode);
   	n = polyIter->getNormal();
   	glNormal3f(n->getX(), n->getY(), n->getZ());
   	for(a = 0; a < 3; a++)
@@ -98,7 +100,7 @@ void GLObject::draw(void)
   		glVertex3f( p.getX(), p.getY(), p.getZ());
   	}
   	glEnd();
-  	glFlush();
+//  	glFlush();
   }
 	glPopMatrix();
 	return;
@@ -147,4 +149,29 @@ void GLObject::setSpin(void)
 			break;
 	}
 	return;
+}
+
+int GLObject::getGLMode(int order)	// return the GL draw mode based on order
+{
+	int a = GL_POINTS;	// Default to points
+	switch(this->drawMode)
+	{
+		case POINTS:	// From drawmodes.h
+			a = GL_POINTS;
+		break;
+		case WIREFRAME:
+			a = GL_LINES;
+		break;
+		case WIREFRAME | HIDDENSURFACE:
+			if(order == 0) a = GL_LINES;
+			if(order == 1) a = GL_POLYGON;
+		break;
+		case POLYGON:
+		case TEXTURE:
+		case ENVIRONMENT:
+		case TEXTURE | ENVIRONMENT:
+			a = GL_POLYGON;
+		break;
+	}
+	return a;
 }

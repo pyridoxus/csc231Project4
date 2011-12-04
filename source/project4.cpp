@@ -78,7 +78,7 @@ void myDraw()
   glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
   glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
   glObject.draw();
-  cout << "Draw" << endl;
+//  cout << "Draw" << endl;
   // Swap buffers
   glutSwapBuffers();
 }
@@ -93,23 +93,27 @@ void keyboard( unsigned char key, int x, int y )
       exit(1);
     break;
     case 'p':		// display as points
-    	glObject.setDrawMode(GL_POINTS);
+    	glObject.setDrawMode(POINTS);
     break;
     case 'w':		// display as wireframe
-    	glObject.setDrawMode(GL_LINES);
+    	glObject.setDrawMode(WIREFRAME);
     break;
     case 'h':		// display as hidden-surface wireframe
+    	glObject.setDrawMode(WIREFRAME | HIDDENSURFACE);
     break;
     case 'm':		// display as polygons
-    	glObject.setDrawMode(GL_POLYGON);
+    	glObject.setDrawMode(POLYGON);
     break;
     case 's':		// toggle flat/smooth shading
     break;
     case 't':		// display with 2D texture
+    	glObject.setDrawMode(TEXTURE);
     break;
     case 'e':		// display with Environment texture
+    	glObject.setDrawMode(ENVIRONMENT);
     break;
     case 'b':		// display with 2D and Environment texture
+    	glObject.setDrawMode(TEXTURE | ENVIRONMENT);
     break;
     case 'A':		// start animated spin about Y axis
     	glObject.spinY(1);

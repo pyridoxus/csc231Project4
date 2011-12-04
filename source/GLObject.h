@@ -7,6 +7,7 @@ using namespace std;
 #include "Polygon.h"
 #include "TextureVertex.h"
 #include "Point.h"
+#include "drawModes.h"
 
 class GLObject
 {
@@ -26,6 +27,7 @@ class GLObject
 		float angleY;
 		void calcNormal(Polygon *poly);	// Calculate the normal of the polygon
 		void setSpin(void);	// Set angle of spin (or reset) based on state
+		int getGLMode(int order);	// return the GL draw mode based on order
 };
 
 #endif
