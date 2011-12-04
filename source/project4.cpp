@@ -2,9 +2,8 @@
 
 int main( int argc, char **argv )
 {
-  // Read polygonal mesh
-	glObject.print();
-	// Compute polygon and vertex normals
+  // Read polygonal mesh	(occurs before main starts, see project4.h)
+	// Compute polygon and vertex normals (occurs before main starts)
 
   // Initialize window system
   glutInit( &argc, argv );
@@ -54,8 +53,22 @@ int main( int argc, char **argv )
   glutDisplayFunc( myDraw );
   glutKeyboardFunc( keyboard );
 	glutSpecialFunc( specialKeyFunc );
+  glutCreateMenu( menu );
+	glutAddMenuEntry( "display as points (or 'p' key)", 1 );
+	glutAddMenuEntry( "display as wireframe (or 'w' key)", 2 );
+	glutAddMenuEntry( "display as hidden-surface wireframe (or 'h' key)", 3 );
+	glutAddMenuEntry( "display as polygons (or 'm' key)", 4 );
+	glutAddMenuEntry( "toggle flat/smooth shading (or 's' key)", 5 );
+	glutAddMenuEntry( "display with 2D texture (or 't' key)", 6 );
+	glutAddMenuEntry( "display with Environment texture (or 'e' key)", 7 );
+	glutAddMenuEntry( "display with 2D and Environment texture (or 'b' key)", 8 );
+	glutAddMenuEntry( "start animated spin about Y axis (or 'A' key)", 9 );
+	glutAddMenuEntry( "stop animated spin about Y axis (or 'S' key)", 10 );
+	glutAddMenuEntry( "reset animated spin about Y axis (or 'R' key)", 11 );
+	glutAddMenuEntry( "exit the program (or 'q' key)", 12 );
+  glutAttachMenu( GLUT_RIGHT_BUTTON );
 
-	// Menu
+  // Menu
 	showMenu();
 
   // Main loop
@@ -203,4 +216,50 @@ void drawLight(void)
   }
   glPopMatrix();
   return;
+}
+
+void menu( int value )
+{
+	switch(value)
+	{
+		case 1:		// display as points
+    	glObject.setDrawMode(POINTS);
+		break;
+		case 2:		// display as wireframe
+    	glObject.setDrawMode(WIREFRAME);
+		break;
+		case 3:		// display as hidden-surface wireframe
+    	glObject.setDrawMode(WIREFRAME | HIDDENSURFACE);
+		break;
+		case 4:		// display as polygons
+    	glObject.setDrawMode(POLYGON);
+		break;
+		case 5:		// toggle flat/smooth shading
+    	glObject.toggleSmooth();
+		break;
+		case 6:		// display with 2D texture
+    	glObject.setDrawMode(TEXTURE);
+		break;
+		case 7:		// display with Environment texture
+    	glObject.setDrawMode(ENVIRONMENT);
+		break;
+		case 8:		// display with 2D and Environment texture
+    	glObject.setDrawMode(TEXTURE | ENVIRONMENT);
+		break;
+		case 9:		// start animated spin about Y axis
+    	glObject.spinY(1);
+		break;
+		case 10:	// stop animated spin about Y axis
+    	glObject.spinY(0);
+		break;
+		case 11:	// reset animated spin about Y axis
+    	glObject.spinY(-1);
+		break;
+		case 12:	// Quit
+      exit(1);
+		break;
+	}
+  // Redraw the scene
+  glutPostRedisplay();
+	return;
 }

@@ -43,7 +43,7 @@ GLObject::GLObject(String objFile)
 		}
 	}
 	this->calcVertexNormals();
-	cout << "Number of polygons: " << this->mesh.size() << endl;
+//	cout << "Number of polygons: " << this->mesh.size() << endl;
 	file.close();
 	this->spinMode = 0;
 	this->angleY = 0.0;
@@ -59,7 +59,7 @@ GLObject::GLObject(String objFile)
 
 GLObject::~GLObject()
 {
-	cout << "Object destructor" << endl;
+//	cout << "Object destructor" << endl;
 	this->mesh.clear();	// Calls the mesh destructors.
 	this->tvertex.clear();	// Calls the tvertex destructors.
 	this->points.clear();	// Calls the point destructors.

@@ -39,7 +39,7 @@ int width, height;
 GLubyte *texels  = NULL;
 GLubyte *texelsR = NULL;
 float bg[3] = { 0.5, 0.5, 0.5 };
-GLObject glObject(objFile);	// Initialize the object
+GLObject glObject(objFile);	// Initialize the global object
 
 // Functions
 unsigned *read_texture(char *, int *, int * );
@@ -50,5 +50,6 @@ void drawLight(void);
 void myDraw();
 void keyboard( unsigned char, int, int );
 void specialKeyFunc( int key, int x, int y );
+void menu( int );
 
 #endif
