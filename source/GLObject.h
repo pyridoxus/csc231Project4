@@ -25,7 +25,8 @@ class GLObject
 		int drawMode;
 		int spinMode;
 		float angleY;
-		void calcNormal(Polygon *poly);	// Calculate the normal of the polygon
+		void calcPolygonNormal(Polygon *poly);	// Calculate the normal of polygon
+		void calcVertexNormal(Point *point);	// Calculate the normal of vertex
 		void setSpin(void);	// Set angle of spin (or reset) based on state
 		int getGLMode(int order);	// return the GL draw mode based on order
 		void setMaterial(int hidden);		// set the material for GL

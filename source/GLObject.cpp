@@ -38,7 +38,7 @@ GLObject::GLObject(String objFile)
 		else if(!dataType.compare("f"))
 		{
 			tempPoly.setPolygon(st);	// Process string into indices (vertex/texture)
-			this->calcNormal(&tempPoly);	// Find the normal
+			this->calcPolygonNormal(&tempPoly);	// Find the normal
 			this->mesh.push_back(tempPoly);	// Store indices
 		}
 	}
@@ -129,7 +129,7 @@ void GLObject::draw(void)
 	return;
 }
 
-void GLObject::calcNormal(Polygon *poly)	// Calculate normal of the polygon
+void GLObject::calcPolygonNormal(Polygon *poly)	// Calculate normal of polygon
 {
 	Vector3D a, b, c;
 	int va, vb, vc;

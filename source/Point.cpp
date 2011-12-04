@@ -28,3 +28,15 @@ void Point::setPoint(String s)
 	this->set(x, y, z);
 	return;
 }
+
+void Point::setVertexNormal(Vector3D *v)	// Set the vertex normal at this point
+{
+	this->vertexNormal.set(*v);
+	return;
+}
+
+void Point::getVertexNormal(Vector3D *v)		// Return pointer to vertex normal
+{
+	v->set(this->vertexNormal);
+	return;
+}

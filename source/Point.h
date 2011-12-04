@@ -11,6 +11,10 @@ class Point: public Vector3D
 		Point(String s);
 		virtual ~Point();
 		void setPoint(String s);	// Convert string from file into floats
+		void setVertexNormal(Vector3D *v);		// Set the vertex normal at this point
+		void getVertexNormal(Vector3D *v);		// Return pointer to vertex normal
+	private:
+		Vector3D vertexNormal;
 };
 
 #endif
