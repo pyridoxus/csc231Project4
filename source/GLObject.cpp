@@ -282,28 +282,71 @@ int GLObject::getGLMode(int order)	// return the GL draw mode based on order
 			}
 		break;
 		case TEXTURE:
-			switch(order)
-			{
-				case 0:
-					glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-					glEnable( GL_TEXTURE_2D );
-					glBindTexture( GL_TEXTURE_2D, this->texName[MARBLE] );
-				break;
-				case 1:
-					glDisable( GL_TEXTURE_2D );
-				break;
-			}
-		case ENVIRONMENT:
-		case TEXTURE | ENVIRONMENT:
-		case POLYGON:
-			if(order == 0)
-			{
-				a = GL_POLYGON;
-				glEnable(GL_LIGHTING);
-				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-				this->setMaterial(false);
-			}
+			this->drawTexture(order);			// Set up the texture
+			a = this->drawPolygons(order);
 		break;
+		case ENVIRONMENT:
+			this->drawEnvironment(order);	// Set up the environment mapping
+			a =this->drawPolygons(order);
+		break;
+		case TEXTURE | ENVIRONMENT:
+			this->drawTexture(order);			// Set up the texture
+			this->drawEnvironment(order);	// Set up the environment mapping
+			a = this->drawPolygons(order);
+		break;
+		case POLYGON:
+			a = this->drawPolygons(order);
+		break;
+	}
+	return a;
+}
+
+void GLObject::drawTexture(int order)		// Draw with textured polygons
+{
+	switch(order)
+	{
+		case 0:
+			glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+			glEnable( GL_TEXTURE_2D );
+			glBindTexture( GL_TEXTURE_2D, this->texName[MARBLE] );
+		break;
+		case 1:
+			glDisable( GL_TEXTURE_2D );
+		break;
+	}
+	return;
+}
+
+void GLObject::drawEnvironment(int order)
+// Draw with environment shaded polygons
+{
+	switch(order)
+	{
+		case 0:
+		  glEnable( GL_TEXTURE_GEN_S );
+		  glEnable( GL_TEXTURE_GEN_T );
+			glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+			glEnable( GL_TEXTURE_2D );
+			glBindTexture( GL_TEXTURE_2D, this->texName[ENVIRON_IMG] );
+		break;
+		case 1:
+		  glDisable( GL_TEXTURE_GEN_S );
+		  glDisable( GL_TEXTURE_GEN_T );
+			glDisable( GL_TEXTURE_2D );
+		break;
+	}
+	return;
+}
+
+int GLObject::drawPolygons(int order)		// Draw the polygons
+{
+	int	a = GL_POINTS;
+	if(order == 0)
+	{
+		a = GL_POLYGON;
+		glEnable(GL_LIGHTING);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		this->setMaterial(false);
 	}
 	return a;
 }

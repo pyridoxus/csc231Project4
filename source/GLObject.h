@@ -40,6 +40,9 @@ class GLObject
 		void setSpin(void);	// Set angle of spin (or reset) based on state
 		int getGLMode(int order);	// return the GL draw mode based on order
 		void setMaterial(int hidden);		// set the material for GL
+		void drawTexture(int order);		// Draw with textured polygons
+		void drawEnvironment(int order);	// Draw with environment shaded polygons
+		int drawPolygons(int order);		// Draw the polygons
 };
 
 

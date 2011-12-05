@@ -48,7 +48,6 @@ int main( int argc, char **argv )
 	texels  = (GLubyte *)read_texture( (char *)texFile.c_str(), &width, &height );
 
 	// 2D texture specifications
-//  makeCheckImage();
 	glBindTexture( GL_TEXTURE_2D, glObject.texName[MARBLE] );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
@@ -62,6 +61,15 @@ int main( int argc, char **argv )
 	texelsR = (GLubyte *)read_texture( (char *)envFile.c_str(), &width, &height );
 
 	// Environment texture specifications
+  glBindTexture( GL_TEXTURE_2D, glObject.texName[ENVIRON_IMG] );
+  glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+  glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+  glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+  glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+  glTexGeni( GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP );
+  glTexGeni( GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP );
+  glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
+  		GL_UNSIGNED_BYTE, texelsR );
 
   // Callbacks
   glutDisplayFunc( myDraw );
