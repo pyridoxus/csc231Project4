@@ -36,6 +36,7 @@ float aspect = 1.333;
 float nearClip = 0.01;
 float farClip = 10000.0;
 int width, height;
+//GLubyte texels[64][64][3];
 GLubyte *texels  = NULL;
 GLubyte *texelsR = NULL;
 float bg[3] = { 0.5, 0.5, 0.5 };

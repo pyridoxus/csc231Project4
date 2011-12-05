@@ -6,8 +6,8 @@ int main( int argc, char **argv )
 	// Compute polygon and vertex normals (occurs before main starts)
 	// The GLObject is global.
 
-	height = 256;
-	width = 256;
+	height = 320;
+	width = 400;
 
   // Initialize window system
   glutInit( &argc, argv );
@@ -48,13 +48,13 @@ int main( int argc, char **argv )
 	texels  = (GLubyte *)read_texture( (char *)texFile.c_str(), &width, &height );
 
 	// 2D texture specifications
-	glEnable( GL_TEXTURE_2D );
+//  makeCheckImage();
 	glBindTexture( GL_TEXTURE_2D, glObject.texName[MARBLE] );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
 			GL_UNSIGNED_BYTE, texels );
 
 
@@ -277,3 +277,4 @@ void menu( int value )
   glutPostRedisplay();
 	return;
 }
+
