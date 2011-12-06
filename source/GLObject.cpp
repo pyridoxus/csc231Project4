@@ -20,6 +20,8 @@ GLObject::GLObject(String objFile)
 	TextureVertex tempTVertex;
 	Point tempPoint;
 	fstream file(objFile.c_str(), fstream::in);
+	int a = 0;
+	cout << "Reading buckyball,obj";
 	while(file.good())
 	{
 		file.getline(s, 256);	// Get line
@@ -41,6 +43,8 @@ GLObject::GLObject(String objFile)
 			this->calcPolygonNormal(&tempPoly);	// Find the normal
 			this->mesh.push_back(tempPoly);	// Store indices
 		}
+		a++;
+		if(a % 1000 == 0) cout << "." << endl;
 	}
 	this->calcVertexNormals();
 //	cout << "Number of polygons: " << this->mesh.size() << endl;
@@ -152,6 +156,8 @@ void GLObject::calcVertexNormals(void)
 	int a, b;
 	Vector3D v;
 	Vector3D *n1;
+	int c = 0;
+	cout << "Calculating vertex normals";
 	for(polyIter1 = this->mesh.begin(); polyIter1 < this->mesh.end() - 1;
 			polyIter1++)
 	{
@@ -173,6 +179,7 @@ void GLObject::calcVertexNormals(void)
 						{
 							n1 = polyIter2->getNormal();
 							v = v + *n1;
+							if(++c % 1000 == 0) cout << "." << endl;
 						}
 					}
 				}
