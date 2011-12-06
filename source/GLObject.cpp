@@ -45,7 +45,6 @@ GLObject::GLObject(String objFile)
 	this->calcVertexNormals();
 //	cout << "Number of polygons: " << this->mesh.size() << endl;
 	file.close();
-	this->spinMode = 0;
 	this->angleY = 0.0;
 	this->drawMode = POINTS;
 	this->smooth = 0;
@@ -95,69 +94,40 @@ void GLObject::print(void)
   }
 }
 
-void GLObject::draw(void)
+void GLObject::glDraw(int glMode)
 {
   vector<Polygon>::iterator polyIter;
-	int pidx, a, glMode, b, tidx;
+	int pidx, a, tidx;
 	Point p;
 	TextureVertex t;
 	Vector3D *n;
-	glMatrixMode( GL_MODELVIEW );
-	glPushMatrix();
-	for(b = 0; b < 2; b++)
+	for(polyIter = this->mesh.begin(); polyIter < this->mesh.end(); polyIter++)
 	{
-		if(this->drawMode == (TEXTURE | ENVIRONMENT))
+		glBegin(glMode);
+		if(!this->smooth)
 		{
-			if(b == 0) this->setSpin();
-			glMode = this->getGLMode(b);
+			n = polyIter->getNormal();
+			glNormal3f(n->getX(), n->getY(), n->getZ());
 		}
-		else
+		for(a = 0; a < 3; a++)
 		{
-			glMode = this->getGLMode(b);
-			if(b == 0) this->setSpin();
-		}
-		for(polyIter = this->mesh.begin(); polyIter < this->mesh.end(); polyIter++)
-		{
-			glBegin(glMode);
-			if(!this->smooth)
+			pidx = polyIter->getVertex(a)->pointIndex;
+			p = this->points[pidx];
+			if(this->smooth)
 			{
-				n = polyIter->getNormal();
+				n = p.getVertexNormal();
 				glNormal3f(n->getX(), n->getY(), n->getZ());
 			}
-			for(a = 0; a < 3; a++)
+			if(this->drawMode & (TEXTURE | ENVIRONMENT))
 			{
-				pidx = polyIter->getVertex(a)->pointIndex;
-				p = this->points[pidx];
-				if(this->smooth)
-				{
-					n = p.getVertexNormal();
-					glNormal3f(n->getX(), n->getY(), n->getZ());
-				}
-				if(this->drawMode & (TEXTURE | ENVIRONMENT))
-				{
-					tidx = polyIter->getVertex(a)->textureIndex;
-					t = this->tvertex[tidx];
-					glTexCoord2f(t.getU(), t.getV());
-				}
-				glVertex3f( p.getX(), p.getY(), p.getZ());
+				tidx = polyIter->getVertex(a)->textureIndex;
+				t = this->tvertex[tidx];
+				glTexCoord2f(t.getU(), t.getV());
 			}
-			glEnd();
+			glVertex3f( p.getX(), p.getY(), p.getZ());
 		}
-		// The only reason to do this loop again is if we are doing hidden surface
-		// wireframe. The getGLMode function defaults to returning GL_POINTS if
-		// there is no second type of drawing, so break out of the loop.
-		switch(this->drawMode)
-		{
-			case POINTS:
-			case WIREFRAME:
-			case POLYGON:
-				b = 2;	// Cheesy way to break the loop
-			break;
-		}
+		glEnd();
 	}
-	glPopMatrix();
-	glEnable(GL_LIGHTING);	// Some modes turn off lighting
-  glFlush();
 	return;
 }
 
@@ -217,176 +187,189 @@ void GLObject::calcVertexNormals(void)
 	return;
 }
 
+void GLObject::draw(void)
+{
+	switch(this->drawMode)
+	{
+		case POINTS:
+			this->drawPoints();
+		break;
+		case WIREFRAME:
+			this->drawWireframe();
+		break;
+		case HIDDENSURFACE:
+			this->drawHiddenWireframe();
+		break;
+		case POLYGON:
+			this->drawPolygons();
+		break;
+		case TEXTURE:
+			this->drawTexture();
+		break;
+		case ENVIRONMENT:
+			this->drawEnvironment();
+		break;
+		case TEXENV:
+			this->drawTextureEnvironment();
+		break;
+	}
+	return;
+}
+
 void GLObject::setDrawMode(int mode)
 {
 	this->drawMode = mode;
 	return;
 }
 
-void GLObject::spinY(int mode)
+void GLObject::setSpin(int spin)
 {
-	this->spinMode = mode;
-	return;
-}
-
-void GLObject::setSpin(void)
-{
-	switch(this->spinMode)
+	switch(spin)
 	{
 		case -1:
 			this->angleY = 0.0;
-			this->spinMode = 0;
 			break;
 		case 1:
 			this->angleY += 1.0;
-		case 0:
-			glRotatef(this->angleY, 0.0, 1.0, 0.0);
-		  // Redraw the scene
-		  glutPostRedisplay();
-			break;
-	}
-	return;
-}
-
-int GLObject::getGLMode(int order)	// return the GL draw mode based on order
-{
-	int a = GL_POINTS;	// Default to points
-	switch(this->drawMode)
-	{
-		case POINTS:	// From drawmodes.h
-			if(order == 0)
-			{
-				a = GL_POINTS;
-				glDisable(GL_LIGHTING);
-				this->setMaterial(false);
-			}
-		break;
-		case WIREFRAME:
-			cout << "WIREFRAME" << endl;
-			if(order == 0)
-			{
-				a = GL_LINE_LOOP;
-				glDisable(GL_LIGHTING);
-				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-				this->setMaterial(false);
-			}
-		break;
-		case WIREFRAME | HIDDENSURFACE:
-			cout << "WIREFRAME | HIDDENSURFACE" << endl;
-			switch(order)
-			{
-				case 0:
-					a = GL_POLYGON;
-					glDisable(GL_LIGHTING);
-					glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-					glEnable(GL_POLYGON_OFFSET_FILL);
-					glPolygonOffset(1.0, 1.0);
-					this->setMaterial(true);
-				break;
-				case 1:
-					a = GL_LINE_LOOP;
-					glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-					this->setMaterial(false);
-					glDisable(GL_POLYGON_OFFSET_FILL);
-					break;
-			}
-		break;
-		case TEXTURE:
-			cout << "TEXTURE" << endl;
-			this->drawTexture(order);			// Set up the texture
-			a = this->drawPolygons(order);
-		break;
-		case ENVIRONMENT:
-			cout << "ENVIRONMENT" << endl;
-			this->drawEnvironment(order);	// Set up the environment mapping
-			a =this->drawPolygons(order);
-		break;
-		case TEXTURE | ENVIRONMENT:
-			cout << "TEXTURE | ENVIRONMENT" << endl;
-			this->drawTextureEnvironment(order);	// Set up both texture and env
-			a = this->drawPolygons(order);
-		break;
-		case POLYGON:
-			a = this->drawPolygons(order);
-		break;
-	}
-	return a;
-}
-
-void GLObject::drawTexture(int order)		// Draw with textured polygons
-{
-	switch(order)
-	{
-		case 0:
-			glEnable( GL_TEXTURE_2D );
-			glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-			glBindTexture( GL_TEXTURE_2D, this->texName[MARBLE] );
-			this->setMaterial(false);
-		break;
-		case 1:
-			glDisable( GL_TEXTURE_2D );
 		break;
 	}
 	return;
 }
 
-void GLObject::drawEnvironment(int order)
+void GLObject::drawTexture(void)		// Draw with textured polygons
+{
+	glEnable( GL_TEXTURE_2D );
+	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+	glBindTexture( GL_TEXTURE_2D, this->texName[MARBLE] );
+	this->setMaterial(false);
+
+	glPushMatrix();
+  glRotatef(this->angleY, 0.0, 1.0, 0.0);
+	glMatrixMode( GL_MODELVIEW );
+
+	this->glDraw(GL_POLYGON);
+
+  glDisable( GL_TEXTURE_2D );
+	glPopMatrix();
+  glFlush();
+	return;
+}
+
+void GLObject::drawEnvironment(void)
 // Draw with environment shaded polygons
 {
-	switch(order)
-	{
-		case 0:
-			glEnable( GL_TEXTURE_2D );
-		  glEnable( GL_TEXTURE_GEN_S );
-		  glEnable( GL_TEXTURE_GEN_T );
-			glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-			glBindTexture( GL_TEXTURE_2D, this->texName[ENVIRON_IMG] );
-			this->setMaterial(false);
-		break;
-		case 1:
-		  glDisable( GL_TEXTURE_GEN_S );
-		  glDisable( GL_TEXTURE_GEN_T );
-			glDisable( GL_TEXTURE_2D );
-		break;
-	}
+	glEnable( GL_TEXTURE_2D );
+	glEnable( GL_TEXTURE_GEN_S );
+	glEnable( GL_TEXTURE_GEN_T );
+	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+	glBindTexture( GL_TEXTURE_2D, this->texName[ENVIRON_IMG] );
+	this->setMaterial(false);
+
+	glPushMatrix();
+  glRotatef(this->angleY, 0.0, 1.0, 0.0);
+	glMatrixMode( GL_MODELVIEW );
+	this->glDraw(GL_POLYGON);
+
+	glDisable( GL_TEXTURE_GEN_S );
+	glDisable( GL_TEXTURE_GEN_T );
+	glDisable( GL_TEXTURE_2D );
+	glPopMatrix();
+  glFlush();
 	return;
 }
 
-void GLObject::drawTextureEnvironment(int order)
+void GLObject::drawTextureEnvironment(void)
 // Draw with texture and environment
 {
-	switch(order)
-	{
-		case 0:
-		  glEnable( GL_TEXTURE_2D );
-		  glEnable( GL_TEXTURE_GEN_S );
-		  glEnable( GL_TEXTURE_GEN_T );
-		  glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-		  glBindTexture( GL_TEXTURE_2D, this->texName[ENVIRON_IMG] );
-		  glBindTexture( GL_TEXTURE_2D, this->texName[MARBLE] );
-			this->setMaterial(false);
-		break;
-		case 1:
-		  // Disable texturing
-		  glDisable( GL_TEXTURE_2D );
-		  glDisable( GL_TEXTURE_GEN_S );
-		  glDisable( GL_TEXTURE_GEN_T );
-		break;
-	}
+	glEnable( GL_TEXTURE_2D );
+	glEnable( GL_TEXTURE_GEN_S );
+	glEnable( GL_TEXTURE_GEN_T );
+	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+	glBindTexture( GL_TEXTURE_2D, this->texName[ENVIRON_IMG] );
+	glBindTexture( GL_TEXTURE_2D, this->texName[MARBLE] );
+	this->setMaterial(false);
+
+	glMatrixMode( GL_MODELVIEW );
+	glPushMatrix();
+	glRotatef(this->angleY, 0.0, 1.0, 0.0);
+	this->glDraw(GL_POLYGON);
+
+	// Disable texturing
+	glDisable( GL_TEXTURE_2D );
+	glDisable( GL_TEXTURE_GEN_S );
+	glDisable( GL_TEXTURE_GEN_T );
+	glPopMatrix();
+  glFlush();
 	return;
 }
 
-int GLObject::drawPolygons(int order)		// Draw the polygons
+void GLObject::drawPolygons(void)		// Draw the polygons
 {
-	int	a = GL_POINTS;
-	if(order == 0)
-	{
-		a = GL_POLYGON;
-		glEnable(GL_LIGHTING);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		this->setMaterial(false);
-	}
-	return a;
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glMatrixMode( GL_MODELVIEW );
+	glPushMatrix();
+	glRotatef(this->angleY, 0.0, 1.0, 0.0);
+	this->setMaterial(false);
+	this->glDraw(GL_POLYGON);
+
+	glPopMatrix();
+  glFlush();
+  return;
+}
+
+void GLObject::drawPoints(void)		// Draw the points
+{
+	glDisable(GL_LIGHTING);
+	glMatrixMode( GL_MODELVIEW );
+	glPushMatrix();
+	glRotatef(this->angleY, 0.0, 1.0, 0.0);
+	this->setMaterial(false);
+	this->glDraw(GL_POINTS);
+
+	glPopMatrix();
+	glEnable(GL_LIGHTING);
+  glFlush();
+  return;
+}
+
+void GLObject::drawWireframe(void)		// Draw in wireframe
+{
+	glDisable(GL_LIGHTING);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glMatrixMode( GL_MODELVIEW );
+	glPushMatrix();
+	glRotatef(this->angleY, 0.0, 1.0, 0.0);
+	this->setMaterial(false);
+
+	this->glDraw(GL_LINE_LOOP);
+
+	glPopMatrix();
+	glEnable(GL_LIGHTING);
+  glFlush();
+  return;
+}
+
+void GLObject::drawHiddenWireframe(void)		// Draw in hidden surface wireframe
+{
+	glDisable(GL_LIGHTING);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	glPolygonOffset(1.0, 1.0);
+	glPushMatrix();
+	glRotatef(this->angleY, 0.0, 1.0, 0.0);
+	this->setMaterial(true);
+
+	this->glDraw(GL_POLYGON);
+
+	glDisable(GL_POLYGON_OFFSET_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	this->setMaterial(false);
+
+	this->glDraw(GL_LINE_LOOP);
+	glPopMatrix();
+	glEnable(GL_LIGHTING);
+  glFlush();
+	return;
 }
 
 void GLObject::setMaterial(int hidden)

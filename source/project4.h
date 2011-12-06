@@ -52,5 +52,6 @@ void myDraw();
 void keyboard( unsigned char, int, int );
 void specialKeyFunc( int key, int x, int y );
 void menu( int );
+void myIdle(void);
 
 #endif

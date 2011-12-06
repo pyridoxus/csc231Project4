@@ -152,13 +152,14 @@ void keyboard( unsigned char key, int x, int y )
     	glObject.setDrawMode(TEXTURE | ENVIRONMENT);
     break;
     case 'A':		// start animated spin about Y axis
-    	glObject.spinY(1);
+      glutIdleFunc(myIdle);
     break;
     case 'S':		// stop animated spin about Y axis
-    	glObject.spinY(0);
+      glutIdleFunc(NULL);
     break;
     case 'R':		// reset animated spin about Y axis
-    	glObject.spinY(-1);
+      glutIdleFunc(NULL);
+    	glObject.setSpin(-1);
     break;
  	}
 
@@ -272,13 +273,14 @@ void menu( int value )
     	glObject.setDrawMode(TEXTURE | ENVIRONMENT);
 		break;
 		case 9:		// start animated spin about Y axis
-    	glObject.spinY(1);
+      glutIdleFunc(myIdle);
 		break;
 		case 10:	// stop animated spin about Y axis
-    	glObject.spinY(0);
+      glutIdleFunc(NULL);
 		break;
 		case 11:	// reset animated spin about Y axis
-    	glObject.spinY(-1);
+      glutIdleFunc(NULL);
+    	glObject.setSpin(-1);
 		break;
 		case 12:	// Quit
       exit(1);
@@ -287,5 +289,13 @@ void menu( int value )
   // Redraw the scene
   glutPostRedisplay();
 	return;
+}
+
+// Idle function callback
+void myIdle(void)
+{
+	glObject.setSpin(1);
+	myDraw();
+  return;
 }
 
