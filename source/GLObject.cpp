@@ -104,10 +104,18 @@ void GLObject::draw(void)
 	Vector3D *n;
 	glMatrixMode( GL_MODELVIEW );
 	glPushMatrix();
-	this->setSpin();
 	for(b = 0; b < 2; b++)
 	{
-		glMode = this->getGLMode(b);
+		if(this->drawMode == (TEXTURE | ENVIRONMENT))
+		{
+			if(b == 0) this->setSpin();
+			glMode = this->getGLMode(b);
+		}
+		else
+		{
+			glMode = this->getGLMode(b);
+			if(b == 0) this->setSpin();
+		}
 		for(polyIter = this->mesh.begin(); polyIter < this->mesh.end(); polyIter++)
 		{
 			glBegin(glMode);
@@ -125,7 +133,7 @@ void GLObject::draw(void)
 					n = p.getVertexNormal();
 					glNormal3f(n->getX(), n->getY(), n->getZ());
 				}
-				if((this->drawMode == TEXTURE) || (this->drawMode == ENVIRONMENT))
+				if(this->drawMode & (TEXTURE | ENVIRONMENT))
 				{
 					tidx = polyIter->getVertex(a)->textureIndex;
 					t = this->tvertex[tidx];
@@ -254,6 +262,7 @@ int GLObject::getGLMode(int order)	// return the GL draw mode based on order
 			}
 		break;
 		case WIREFRAME:
+			cout << "WIREFRAME" << endl;
 			if(order == 0)
 			{
 				a = GL_LINE_LOOP;
@@ -263,6 +272,7 @@ int GLObject::getGLMode(int order)	// return the GL draw mode based on order
 			}
 		break;
 		case WIREFRAME | HIDDENSURFACE:
+			cout << "WIREFRAME | HIDDENSURFACE" << endl;
 			switch(order)
 			{
 				case 0:
@@ -282,16 +292,18 @@ int GLObject::getGLMode(int order)	// return the GL draw mode based on order
 			}
 		break;
 		case TEXTURE:
+			cout << "TEXTURE" << endl;
 			this->drawTexture(order);			// Set up the texture
 			a = this->drawPolygons(order);
 		break;
 		case ENVIRONMENT:
+			cout << "ENVIRONMENT" << endl;
 			this->drawEnvironment(order);	// Set up the environment mapping
 			a =this->drawPolygons(order);
 		break;
 		case TEXTURE | ENVIRONMENT:
-			this->drawTexture(order);			// Set up the texture
-			this->drawEnvironment(order);	// Set up the environment mapping
+			cout << "TEXTURE | ENVIRONMENT" << endl;
+			this->drawTextureEnvironment(order);	// Set up both texture and env
 			a = this->drawPolygons(order);
 		break;
 		case POLYGON:
@@ -306,9 +318,10 @@ void GLObject::drawTexture(int order)		// Draw with textured polygons
 	switch(order)
 	{
 		case 0:
-			glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 			glEnable( GL_TEXTURE_2D );
+			glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 			glBindTexture( GL_TEXTURE_2D, this->texName[MARBLE] );
+			this->setMaterial(false);
 		break;
 		case 1:
 			glDisable( GL_TEXTURE_2D );
@@ -323,16 +336,41 @@ void GLObject::drawEnvironment(int order)
 	switch(order)
 	{
 		case 0:
+			glEnable( GL_TEXTURE_2D );
 		  glEnable( GL_TEXTURE_GEN_S );
 		  glEnable( GL_TEXTURE_GEN_T );
 			glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-			glEnable( GL_TEXTURE_2D );
 			glBindTexture( GL_TEXTURE_2D, this->texName[ENVIRON_IMG] );
+			this->setMaterial(false);
 		break;
 		case 1:
 		  glDisable( GL_TEXTURE_GEN_S );
 		  glDisable( GL_TEXTURE_GEN_T );
 			glDisable( GL_TEXTURE_2D );
+		break;
+	}
+	return;
+}
+
+void GLObject::drawTextureEnvironment(int order)
+// Draw with texture and environment
+{
+	switch(order)
+	{
+		case 0:
+		  glEnable( GL_TEXTURE_2D );
+		  glEnable( GL_TEXTURE_GEN_S );
+		  glEnable( GL_TEXTURE_GEN_T );
+		  glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+		  glBindTexture( GL_TEXTURE_2D, this->texName[ENVIRON_IMG] );
+		  glBindTexture( GL_TEXTURE_2D, this->texName[MARBLE] );
+			this->setMaterial(false);
+		break;
+		case 1:
+		  // Disable texturing
+		  glDisable( GL_TEXTURE_2D );
+		  glDisable( GL_TEXTURE_GEN_S );
+		  glDisable( GL_TEXTURE_GEN_T );
 		break;
 	}
 	return;

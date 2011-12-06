@@ -42,6 +42,7 @@ class GLObject
 		void setMaterial(int hidden);		// set the material for GL
 		void drawTexture(int order);		// Draw with textured polygons
 		void drawEnvironment(int order);	// Draw with environment shaded polygons
+		void drawTextureEnvironment(int order);		// Draw with textured polygons
 		int drawPolygons(int order);		// Draw the polygons
 };
 

@@ -37,7 +37,10 @@ int main( int argc, char **argv )
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
   glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
 
-	// Enable lighting model
+  // Improves specular lighting
+  glLightModeli( GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR );
+
+  // Enable lighting model
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
 
