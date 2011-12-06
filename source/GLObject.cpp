@@ -1,13 +1,13 @@
 #include "GLObject.h"
 
 // Specify material properties
-GLfloat ambient[] = { 0.2, 0.2, 0.2, 1.0 };
+GLfloat ambient[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat specular[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat shininess[] = { 100.0 };
 // Specify hidden surface properties
 GLfloat h_ambient[] = { 0.0, 0.0, 0.0, 1.0 };
-GLfloat h_diffuse[] = { 0.5, 0.5, 0.5, 1.0 };
+GLfloat h_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat h_specular[] = { 0.0, 0.0, 0.0, 1.0 };
 GLfloat h_shininess[] = { 0.0 };
 
@@ -48,11 +48,8 @@ GLObject::GLObject(String objFile)
 	this->angleY = 0.0;
 	this->drawMode = POINTS;
 	this->smooth = 0;
-	for(int a = 0; a < 3; a++)
-	{
-		bg[a] = 0.5;
-		fg[a] = 1.0;
-	}
+	this->fg[0] = this->fg[1] = this->fg[2] = 1.0;
+	this->bg[0] = this->bg[1] = this->bg[2] = 0.5;
 	return;
 }
 
@@ -309,7 +306,7 @@ void GLObject::drawPolygons(void)		// Draw the polygons
 	glMatrixMode( GL_MODELVIEW );
 	glPushMatrix();
 	glRotatef(this->angleY, 0.0, 1.0, 0.0);
-	this->setMaterial(false);
+	this->setMaterial(true);
 	this->glDraw(GL_POLYGON);
 
 	glPopMatrix();
@@ -319,32 +316,28 @@ void GLObject::drawPolygons(void)		// Draw the polygons
 
 void GLObject::drawPoints(void)		// Draw the points
 {
-	glDisable(GL_LIGHTING);
 	glMatrixMode( GL_MODELVIEW );
 	glPushMatrix();
 	glRotatef(this->angleY, 0.0, 1.0, 0.0);
-	this->setMaterial(false);
+	this->setMaterial(true);
 	this->glDraw(GL_POINTS);
 
 	glPopMatrix();
-	glEnable(GL_LIGHTING);
   glFlush();
   return;
 }
 
 void GLObject::drawWireframe(void)		// Draw in wireframe
 {
-	glDisable(GL_LIGHTING);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glMatrixMode( GL_MODELVIEW );
 	glPushMatrix();
 	glRotatef(this->angleY, 0.0, 1.0, 0.0);
-	this->setMaterial(false);
+	this->setMaterial(true);
 
 	this->glDraw(GL_LINE_LOOP);
 
 	glPopMatrix();
-	glEnable(GL_LIGHTING);
   glFlush();
   return;
 }
