@@ -221,6 +221,7 @@ void specialKeyFunc( int key, int x, int y )
 
 void drawLight(void)
 {
+	// This code was borrowed from an earlier project
   glPushMatrix();
   glLoadName( LIGHT );      // Load picking id
   glTranslatef( light_position[0], light_position[1], light_position[2] );
@@ -228,17 +229,19 @@ void drawLight(void)
 	// Draw light
   if(glIsEnabled(GL_LIGHT0))
   {
+  	glDisable(GL_LIGHT0);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, ob_diffuse_on);
     glMaterialfv(GL_FRONT, GL_SPECULAR, ob_specular);
     glMaterialfv(GL_FRONT, GL_AMBIENT, ob_ambient_on);
-    glutSolidSphere( 0.5, 10, 10 );
+    glutSolidSphere( 0.25, 10, 10 );
+  	glEnable(GL_LIGHT0);
   }
   else
   {
     glMaterialfv(GL_FRONT, GL_DIFFUSE, ob_diffuse_off);
     glMaterialfv(GL_FRONT, GL_SPECULAR, ob_specular);
     glMaterialfv(GL_FRONT, GL_AMBIENT, ob_ambient_off);
-		glutWireSphere(0.5, 10, 10);
+		glutWireSphere(0.25, 10, 10);
   }
   glPopMatrix();
   return;

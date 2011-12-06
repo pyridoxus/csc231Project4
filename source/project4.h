@@ -22,14 +22,14 @@ GLfloat light_position[] = { 3.0, 3.0, 3.0, 0.0 };
 
 // Light properties
 GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-GLfloat light_ambient[] = { 0.05, 0.05, 0.05, 1.0 };
+GLfloat light_ambient[] = { 5.0, 5.0, 5.0, 1.0 };
 
 // Light object properties
-GLfloat ob_diffuse_on[] = { 0.7, 0.7, 0.2, 1.0 };
+GLfloat ob_diffuse_on[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat ob_diffuse_off[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat ob_specular[] = { 0.0, 0.0, 0.0, 1.0 };
-GLfloat ob_ambient_on[] = { 7.0, 7.0, 2.0, 1.0 };
-GLfloat ob_ambient_off[] = { 7.0, 7.0, 7.0, 1.0 };
+GLfloat ob_ambient_on[] = { 5.0, 5.0, 5.0, 1.0 };
+GLfloat ob_ambient_off[] = { 1.0, 1.0, 1.0, 1.0 };
 
 float fov = 30.0;
 float aspect = 1.333;
