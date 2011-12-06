@@ -22,7 +22,7 @@ GLfloat light_position[] = { 3.0, 3.0, 3.0, 0.0 };
 
 // Light properties
 GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-GLfloat light_ambient[] = { 5.0, 5.0, 5.0, 1.0 };
+GLfloat light_ambient[] = { 0.05, 0.05, 0.05, 1.0 };
 
 // Light object properties
 GLfloat ob_diffuse_on[] = { 1.0, 1.0, 1.0, 1.0 };
